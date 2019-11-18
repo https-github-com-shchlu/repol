@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scl.dao.UserDao">
+    <sql id="userColumns"> ${alias}.name,${alias}.age,${alias}.email </sql>
+    <select id="findAll" resultType="User">
+    select
+    <include refid="userColumns"><property name="alias" value="t1"/></include>
+    from user t1
+  </select>
+    <select id="findOne" resultType="User" parameterType="int">
+        select
+        <include refid="userColumns"><property name="alias" value="t1"/></include>
+        from user t1
+        where id = #{id}
+    </select>
+    <insert id="insert" parameterType="User">
+        insert into user(name,age,email)
+        values (#{name},#{age},#{email})
+    </insert>
+    <insert id="insertList" parameterType="User">
+        insert into user(name,age,email) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.name},#{item.age},#{item.email})
+        </foreach>
+    </insert>
+    <delete id="delete" parameterType="int">
+        delete from user
+        where id = #{id}
+    </delete>
+    <update id="update" parameterType="User">
+        update user
+        <set>
+            <if test="name!=null">name = #{name},</if>
+            <if test="age!=null">age=#{age},</if>
+            <if test="email!=null">email=#{email}</if>
+        </set>
+        where id =#{id}
+    </update>
+
+
+</mapper>
